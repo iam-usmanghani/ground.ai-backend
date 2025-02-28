@@ -1,6 +1,8 @@
+argon2-cffi
 Flask
-Flask-SQLAlchemy
-Flask-Bcrypt
-Flask-JWT-Extended
+flask_bcrypt
+flask_jwt_extended
+flask_limiter
+flask_sqlalchemy
+Werkzeug
 psycopg2
-gunicorn

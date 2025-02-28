@@ -1,0 +1,6 @@
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+/ground-zero-backend/Auth/__pycache__
+/ground-zero-backend/Config/__pycache__
+*.pyc
