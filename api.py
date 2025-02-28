@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager
 from Auth.auth import auth_bp
 from Models.models import db
 from Config.config import configurations
+from flask_cors import CORS
 import os
 
 def create_app():
@@ -15,6 +16,8 @@ def create_app():
     db.init_app(app)
     Bcrypt(app)
     JWTManager(app)
+
+    CORS(app, resources={r"/*": {"origins": "*"}})  
 
     app.register_blueprint(auth_bp)
 
