@@ -33,15 +33,15 @@ def register():
         # Validate email
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         if not re.match(email_regex, email):
-            return jsonify({'error': 'Invalid email format'}), 400
+            return jsonify({'data': [], 'statusCode': 200, 'message': 'Invalid email format'})
 
         # Validate password strength
         if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
-            return jsonify({'error': 'Password must be at least 8 characters long and include both letters and numbers'}), 400
+            return jsonify({'data': [], 'statusCode': 200, 'message': 'Password must be at least 8 characters long and include both letters and numbers'})
 
         # Check if user exists
         if User.query.filter((User.username == username) | (User.email == email)).first():
-            return jsonify({'error': 'Username or email already exists'}), 400
+            return jsonify({'data': [], 'statusCode': 200,'message': 'Username or email already exists'})
 
         # Hash the password securely
         password_hash = authops.hash_password(password)
@@ -53,7 +53,7 @@ def register():
 
         logging.info(f"New user registered: {username} ({email})")
 
-        return jsonify({'message': 'User registered successfully.'}), 201
+        return jsonify({'data': [], 'statusCode': 201, 'message': 'User registered successfully.'}), 201
 
     except Exception as e:
         logging.error(f"Registration error: {str(e)}")
@@ -73,13 +73,12 @@ def login():
 
         if not identifier or not password:
             return jsonify({'error': 'Missing email/username or password'}), 400
-
         # Fetch user by email or username
         user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
 
         # Check if user exists
         if not user:
-            return jsonify({'error': 'Invalid credentials'}), 401
+            return jsonify({'data': [], 'statusCode': 200, 'message': 'Invalid credentials'})
 
         # Verify password using Argon2
         if not authops.verify_password(user.password_hash, password):
@@ -91,7 +90,7 @@ def login():
 
         logging.info(f"User {user.username} logged in successfully")
 
-        return jsonify({'access_token': access_token}), 200
+        return jsonify({'data': {'access_token': access_token}, 'statusCode': 200, 'message': 'logged in successfully'})
     
     except Exception as e:
         logging.error(f"Login error: {str(e)}")
