@@ -22,7 +22,7 @@ def register():
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'error': 'Invalid input'}), 400
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Invalid input'}), 400
         
         # Extract and validate input
         fname = data.get('fname', '').strip()
@@ -34,11 +34,11 @@ def register():
         # Validate email
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         if not re.match(email_regex, email):
-            return jsonify({'data': [], 'statusCode': 200, 'message': 'Invalid email format'})
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Invalid email format'})
 
         # Validate password strength
         if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
-            return jsonify({'data': [], 'statusCode': 200, 'message': 'Password must be at least 8 characters long and include both letters and numbers'})
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Password must be at least 8 characters long and include both letters and numbers'})
 
         # Check if user exists
         if User.query.filter((User.username == username) | (User.email == email)).first():
@@ -67,7 +67,7 @@ def login():
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'error': 'Invalid input'}), 400
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Invalid input'})
 
         identifier = data.get('email') or data.get('username')
         password = data.get('password')
