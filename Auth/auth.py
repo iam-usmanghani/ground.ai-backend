@@ -83,7 +83,7 @@ def login():
         # Verify password using Argon2
         if not authops.verify_password(user.password_hash, password):
             logging.warning(f"Failed login attempt for user {user.username}")
-            return jsonify({'error': 'Invalid credentials'}), 401
+            return jsonify({'data': [], 'statusCode': 401, 'message': 'Invalid credentials'}), 401
 
         # Create JWT access token (24-hour expiry)
         access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=1))
