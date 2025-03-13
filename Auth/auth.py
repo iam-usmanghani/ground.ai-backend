@@ -8,7 +8,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import re
 from . import authoperations as authops
-
+# Email regex pattern
+EMAIL_REGEX = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 
 bcrypt = Bcrypt()
 auth_bp = Blueprint('auth', __name__)
@@ -72,7 +73,12 @@ def login():
         password = data.get('password')
 
         if not identifier or not password:
-            return jsonify({'error': 'Missing email/username or password'}), 400
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Missing email/username or password'})
+        
+        # Vaidate email format if identifier is an email
+        if "@" in identifier and not re.match(EMAIL_REGEX, identifier):
+            return jsonify({'data': [], 'statusCode': 400, 'message': 'Invalid email format'})
+        
         # Fetch user by email or username
         user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
 
